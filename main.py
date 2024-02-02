@@ -1,7 +1,6 @@
 from turtle import Turtle, Screen
 from snakebody import SnakeBody, Direction
 from food import Food
-import math
 
 
 def is_close(pos1, pos2):
@@ -14,25 +13,26 @@ def is_close(pos1, pos2):
     return dist_x < 1 and dist_y < 1
 
 
+def setup_screen():
+    screen = Screen()
+    screen.setup(SCREEN_WIDTH, SCREEN_HEIGHT)
+    screen.bgcolor("#8AC847")
+    screen.title("Snake game")
+    screen.tracer(0)
+    return screen
+
+
 # Constants
 GRID_SIZE = 20
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
 
 # Set up the screen
-screen = Screen()
-screen.setup(SCREEN_WIDTH, SCREEN_HEIGHT)
-screen.bgcolor("#8AC847")
-screen.title("Snake game")
-screen.tracer(0)
-# paint_background()
-
+screen = setup_screen()
 
 # Initialize the snake
 snake = SnakeBody()
 food = Food()
-
-snake.pin_segment(GRID_SIZE)
 
 # Game loop
 while True:

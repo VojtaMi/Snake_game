@@ -8,20 +8,11 @@ SNAKE_SPEED = 0.1
 GRID_SIZE = 20
 
 
-class DrawTurtle(Turtle):
-    def __init__(self):
-        super().__init__()
-        self.pensize(20)
-        self.pencolor("blue")
-        self.fillcolor("purple")
-        self.shape("triangle")
-        self.turtlesize(1.7)
-
-
 class SnakeBody:
     def __init__(self):
         self.head = Segment()
         self.tail = self.head
+        self.pin_segment(GRID_SIZE)
         self.head_switch = Direction.RIGHT
 
     def pin_segment(self, grid_size):
@@ -38,7 +29,7 @@ class SnakeBody:
                 direction == Direction.UP or direction == Direction.DOWN):
             self.head_switch = direction
 
-    def _draw_snake(self, screen):
+    def _animate_snake_movement(self, screen):
         # draw main body
         draw_body_turtle = DrawTurtle()
         draw_body_turtle.hideturtle()
@@ -100,6 +91,17 @@ class SnakeBody:
 
     def move(self, grid_size, screen):
         self.head.setheading(self.head_switch)
-        self._draw_snake(screen)
+        self._animate_snake_movement(screen)
         self._move_all_segments(grid_size)
         self._pass_directions()
+
+
+class DrawTurtle(Turtle):
+    def __init__(self):
+        super().__init__()
+        self.pensize(20)
+        self.pencolor("blue")
+        self.fillcolor("purple")
+        self.shape("triangle")
+        self.turtlesize(1.7)
+
