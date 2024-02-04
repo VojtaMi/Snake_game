@@ -14,6 +14,7 @@ class SnakeBody:
         self.tail = self.head
         self.pin_segment(GRID_SIZE)
         self.head_switch = Direction.RIGHT
+        self.snake_animation = SnakeAnimation(self)
 
     def pin_segment(self, grid_size):
         new_tail = Segment()
@@ -28,52 +29,6 @@ class SnakeBody:
         elif (heading == Direction.LEFT or heading == Direction.RIGHT) and (
                 direction == Direction.UP or direction == Direction.DOWN):
             self.head_switch = direction
-
-    def _animate_snake_movement(self, screen):
-        # draw main body
-        draw_body_turtle = DrawTurtle()
-        draw_body_turtle.hideturtle()
-        draw_body_turtle.penup()
-
-        from_segment = self.tail.previous_segment
-        draw_body_turtle.goto(from_segment.pos())
-        draw_body_turtle.pendown()
-        # draw main body
-        while from_segment is not self.head:
-            draw_body_turtle.setheading(from_segment.heading())
-            draw_body_turtle.forward(GRID_SIZE)
-            from_segment = from_segment.previous_segment
-
-        steps = int(GRID_SIZE / STEP_SIZE)
-        new_tail_pos = self.tail.previous_segment.pos()
-
-        draw_ht_turtle = DrawTurtle()
-        for i in range(steps):
-            fraction_distance = STEP_SIZE * i
-            complement_fraction_distance = GRID_SIZE - (STEP_SIZE * i)
-            # shorten tail
-            draw_ht_turtle.penup()
-            draw_ht_turtle.goto(new_tail_pos)
-            draw_ht_turtle.pendown()
-            draw_ht_turtle.setheading(self.tail.heading())
-            draw_ht_turtle.back(complement_fraction_distance)
-
-            # grow head
-            draw_ht_turtle.penup()
-            draw_ht_turtle.goto(self.head.pos())
-            draw_ht_turtle.pendown()
-            draw_ht_turtle.setheading(self.head.heading())
-            draw_ht_turtle.forward(fraction_distance)
-
-            # display fractional shift
-            draw_ht_turtle.penup()
-            screen.update()
-            time.sleep(SNAKE_SPEED / steps)
-            draw_ht_turtle.clear()
-
-        draw_body_turtle.clear()
-        draw_body_turtle.hideturtle()
-        draw_ht_turtle.hideturtle()
 
     def _pass_directions(self):
         later_segment = self.tail
@@ -91,7 +46,7 @@ class SnakeBody:
 
     def move(self, grid_size, screen):
         self.head.setheading(self.head_switch)
-        self._animate_snake_movement(screen)
+        self.snake_animation.animate(screen)
         self._move_all_segments(grid_size)
         self._pass_directions()
 
@@ -105,11 +60,64 @@ class SnakeBody:
 
     def collision(self):
         # collision with border wall
-        if abs(self.head.xcor())>(280+1) or abs(self.head.ycor())>(280+1):
+        if abs(self.head.xcor()) > (280 + 1) or abs(self.head.ycor()) > (280 + 1):
             return True
         else:
             return False
 
+
+class SnakeAnimation:
+    def __init__(self, snake):
+        self.draw_body_turtle = DrawTurtle()
+        self.draw_tail_turtle = DrawTurtle()
+        self.draw_head_turtle = DrawTurtle()
+        self.snake = snake
+
+    def animate(self, screen):
+        self._draw_static_body()
+
+        frames = int(GRID_SIZE / STEP_SIZE)
+        for frame in range(frames):
+            self._animate_tail_movement(frame)
+            self._animate_head_movement(frame)
+            screen.update()
+            time.sleep(SNAKE_SPEED / frames)
+
+    def _draw_static_body(self):
+        # draws a line from the new tail position to the old head position
+        self.draw_body_turtle.clear()
+        self.draw_body_turtle.penup()
+
+        from_segment = self.snake.tail.previous_segment
+        self.draw_body_turtle.goto(from_segment.pos())
+        self.draw_body_turtle.pendown()
+
+        while from_segment is not self.snake.head:
+            self.draw_body_turtle.setheading(from_segment.heading())
+            self.draw_body_turtle.forward(GRID_SIZE)
+            from_segment = from_segment.previous_segment
+
+    def _animate_tail_movement(self, frame):
+        new_tail_pos = self.snake.tail.previous_segment.pos()
+        complement_fraction_distance = GRID_SIZE - (STEP_SIZE * frame)
+
+        self.draw_tail_turtle.clear()
+        self.draw_tail_turtle.penup()
+        self.draw_tail_turtle.goto(new_tail_pos)
+        self.draw_tail_turtle.pendown()
+        self.draw_tail_turtle.setheading(self.snake.tail.heading())
+        self.draw_tail_turtle.back(complement_fraction_distance)
+
+    def _animate_head_movement(self, frame):
+        fraction_distance = STEP_SIZE * frame
+        self.draw_head_turtle.clear()
+        self.draw_head_turtle.showturtle()
+        # grow head
+        self.draw_head_turtle.penup()
+        self.draw_head_turtle.goto(self.snake.head.pos())
+        self.draw_head_turtle.pendown()
+        self.draw_head_turtle.setheading(self.snake.head.heading())
+        self.draw_head_turtle.forward(fraction_distance)
 
 
 class DrawTurtle(Turtle):
@@ -120,4 +128,4 @@ class DrawTurtle(Turtle):
         self.fillcolor("purple")
         self.shape("triangle")
         self.turtlesize(1.7)
-
+        self.hideturtle()
