@@ -1,6 +1,7 @@
 from turtle import Turtle, Screen
 from snakebody import SnakeBody, Direction
 from food import Food
+from score import Score
 
 
 def is_close(pos1, pos2):
@@ -58,6 +59,7 @@ paint_play_field()
 # Initialize the snake
 snake = SnakeBody()
 food = Food()
+score = Score()
 
 
 # Game loop
@@ -65,6 +67,8 @@ while True:
     if is_close(snake.head.pos(), food.pos()):
         snake.pin_segment(GRID_SIZE)
         food.place()
+        score.increase()
+        score.display()
 
     snake.move(GRID_SIZE, screen)
     screen.listen()
