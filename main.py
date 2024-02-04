@@ -63,7 +63,8 @@ score = Score()
 
 
 # Game loop
-while True:
+game_loop = True
+while game_loop:
     if is_close(snake.head.pos(), food.pos()):
         snake.pin_segment(GRID_SIZE)
         food.place(occupied_spots=snake.segments_positions())
@@ -71,8 +72,11 @@ while True:
         score.display()
 
     snake.move(GRID_SIZE, screen)
+    if snake.collision():
+        game_loop = False
     screen.listen()
     screen.onkey(lambda: snake.turn(Direction.RIGHT), "d")
     screen.onkey(lambda: snake.turn(Direction.LEFT), "a")
     screen.onkey(lambda: snake.turn(Direction.UP), "w")
     screen.onkey(lambda: snake.turn(Direction.DOWN), "s")
+screen.exitonclick()

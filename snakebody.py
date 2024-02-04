@@ -103,6 +103,14 @@ class SnakeBody:
             index_segment = index_segment.next_segment
         return positions
 
+    def collision(self):
+        # collision with border wall
+        if abs(self.head.xcor())>(280+1) or abs(self.head.ycor())>(280+1):
+            return True
+        else:
+            return False
+
+
 
 class DrawTurtle(Turtle):
     def __init__(self):
