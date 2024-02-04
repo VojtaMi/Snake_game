@@ -95,6 +95,14 @@ class SnakeBody:
         self._move_all_segments(grid_size)
         self._pass_directions()
 
+    def segments_positions(self):
+        positions = []
+        index_segment = self.head
+        while index_segment:
+            positions.append(index_segment.pos())
+            index_segment = index_segment.next_segment
+        return positions
+
 
 class DrawTurtle(Turtle):
     def __init__(self):

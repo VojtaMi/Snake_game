@@ -7,7 +7,6 @@ class Pen(Turtle):
         self.hideturtle()
 
 
-
 class Score:
     def __init__(self):
         self.score = 0

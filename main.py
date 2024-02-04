@@ -58,7 +58,7 @@ paint_play_field()
 
 # Initialize the snake
 snake = SnakeBody()
-food = Food()
+food = Food(occupied_spots=snake.segments_positions())
 score = Score()
 
 
@@ -66,7 +66,7 @@ score = Score()
 while True:
     if is_close(snake.head.pos(), food.pos()):
         snake.pin_segment(GRID_SIZE)
-        food.place()
+        food.place(occupied_spots=snake.segments_positions())
         score.increase()
         score.display()
 

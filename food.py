@@ -3,16 +3,24 @@ from turtle import Turtle
 import random
 
 
+def all_positions():
+    possible_positions = []
+    for xcor in range(-280, 280 + 1, 20):
+        for ycor in range(-280, 280 + 1, 20):
+            possible_positions.append((xcor, ycor))
+    return set(possible_positions)
+
+
 class Food(Turtle):
-    def __init__(self):
+    def __init__(self, occupied_spots):
         super().__init__()
         self.shape("circle")
         self.color("#1F6357")
-        self.place()
+        self.penup()
+        self.pos_options = all_positions()
+        self.place(occupied_spots)
 
-    def place(self):
-        xcor = random.randint(-14, 14) * 20
-        ycor = random.randint(-14, 14) * 20
-        self.teleport(xcor, ycor)
-
-
+    def place(self, occupied_spots):
+        remaining_options = self.pos_options - set(occupied_spots)
+        coordinates = random.choice(tuple(remaining_options))
+        self.goto(coordinates)
