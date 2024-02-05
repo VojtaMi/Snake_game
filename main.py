@@ -2,17 +2,7 @@ from turtle import Turtle, Screen
 from snakebody import SnakeBody, Direction
 from food import Food
 from score import Score
-
-
-def is_close(pos1, pos2):
-    x1 = pos1[0]
-    x2 = pos2[0]
-    y1 = pos1[1]
-    y2 = pos2[1]
-    dist_x = abs(x1 - x2)
-    dist_y = abs(y1 - y2)
-    return dist_x < 1 and dist_y < 1
-
+import utils
 
 # Constants
 GRID_SIZE = 20
@@ -65,7 +55,7 @@ score = Score()
 # Game loop
 game_loop = True
 while game_loop:
-    if is_close(snake.head.pos(), food.pos()):
+    if utils.check_proximity(snake.head.pos(), food.pos()):
         snake.pin_segment(GRID_SIZE)
         food.place(occupied_spots=snake.segments_positions())
         score.increase()

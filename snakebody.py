@@ -1,6 +1,7 @@
 import time
 from turtle import Turtle
 from segment import Segment, Direction
+import utils
 
 # constants
 STEP_SIZE = 4
@@ -62,8 +63,14 @@ class SnakeBody:
         # collision with border wall
         if abs(self.head.xcor()) > (280 + 1) or abs(self.head.ycor()) > (280 + 1):
             return True
-        else:
-            return False
+        # collision with own body
+        body_segment = self.tail
+        while body_segment is not self.head:
+            if utils.check_proximity(body_segment.pos(), self.head.pos()):
+                return True
+            body_segment = body_segment.previous_segment
+        return False
+
 
 
 class SnakeAnimation:
