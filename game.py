@@ -3,6 +3,7 @@ from snakebody import SnakeBody, Direction
 from score import Score
 import utils
 from turtle import Turtle
+import time
 
 GRID_SIZE = 20
 
@@ -38,6 +39,33 @@ class Game:
         self.screen.onkey(lambda: self.snake.turn(Direction.UP), "w")
         self.screen.onkey(lambda: self.snake.turn(Direction.DOWN), "s")
 
+    def end_game(self):
+        time.sleep(0.5)
+
+        # remove all elements from the screen
+        self.snake.snake_animation.wipe_snake()
+        self.food.hideturtle()
+        self.screen.update()
+
+        time.sleep(0.3)
+
+        end_pen = GameOverWrite()
+        end_pen.write_game_over()
+        self.screen.update()
+
+
+
+class GameOverWrite(Turtle):
+    def __init__(self):
+        super().__init__()
+        self.color("white")
+        self.hideturtle()
+
+    def write_game_over(self):
+        self.penup()
+        self.goto(-160, -100)
+        self.write("Game\nover", font=("Courier", 100, "normal"))
+
 
 class BorderTurtle(Turtle):
     def __init__(self):
@@ -65,6 +93,3 @@ class Background:
     def paint_play_field(self):
         # fill play field green
         self.border_turtle.draw_square(290)
-
-
-

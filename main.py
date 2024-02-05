@@ -14,8 +14,10 @@ def setup_screen():
     screen.tracer(0)
     return screen
 
+
 # Set up the screen
 screen = setup_screen()
 current_game = game.Game(screen)
 current_game.play()
+current_game.end_game()
 screen.exitonclick()

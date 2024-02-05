@@ -126,6 +126,12 @@ class SnakeAnimation:
         self.draw_head_turtle.setheading(self.snake.head.heading())
         self.draw_head_turtle.forward(fraction_distance)
 
+    def wipe_snake(self):
+        self.draw_body_turtle.clear()
+        self.draw_head_turtle.clear()
+        self.draw_tail_turtle.clear()
+        self.draw_head_turtle.hideturtle()
+
 
 class DrawTurtle(Turtle):
     def __init__(self):
