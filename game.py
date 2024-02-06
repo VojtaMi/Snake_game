@@ -1,3 +1,5 @@
+import turtle
+
 from food import Food
 from snakebody import SnakeBody, Direction
 from score import Score
@@ -5,17 +7,19 @@ import utils
 from turtle import Turtle
 import time
 
+
 GRID_SIZE = 20
 
 
 class Game:
-    def __init__(self, screen):
+    def __init__(self, screen, input_handler):
         self.screen = screen
         self.snake = SnakeBody()
         self.food = Food(occupied_spots=self.snake.segments_positions())
         self.score = Score()
         self.background = Background()
         self.background.paint_play_field()
+        self.input_handler = input_handler
 
     def play(self):
         game_loop = True
@@ -33,11 +37,16 @@ class Game:
             self._move_on_key()
 
     def _move_on_key(self):
-        self.screen.listen()
-        self.screen.onkey(lambda: self.snake.turn(Direction.RIGHT), "d")
-        self.screen.onkey(lambda: self.snake.turn(Direction.LEFT), "a")
-        self.screen.onkey(lambda: self.snake.turn(Direction.UP), "w")
-        self.screen.onkey(lambda: self.snake.turn(Direction.DOWN), "s")
+        input_key = self.input_handler.get_key_pressed()
+        if input_key == "d":
+            self.snake.turn(Direction.RIGHT)
+        if input_key == "w":
+            self.snake.turn(Direction.UP)
+        if input_key == "a":
+            self.snake.turn(Direction.LEFT)
+        if input_key == "s":
+            self.snake.turn(Direction.DOWN)
+
 
     def end_game(self):
         time.sleep(0.5)
@@ -52,6 +61,11 @@ class Game:
         end_pen = GameOverWrite()
         end_pen.write_game_over()
         self.screen.update()
+
+        time.sleep(1)
+
+        end_pen.clear()
+        self.score.pen.clear()
 
 
 
