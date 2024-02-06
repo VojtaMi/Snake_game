@@ -72,7 +72,6 @@ class SnakeBody:
         return False
 
 
-
 class SnakeAnimation:
     def __init__(self, snake):
         self.draw_body_turtle = DrawTurtle()
