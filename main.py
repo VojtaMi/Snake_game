@@ -1,5 +1,6 @@
 from turtle import Screen
-import game
+
+import menu
 
 # Constants
 SCREEN_WIDTH = 640
@@ -17,7 +18,7 @@ def setup_screen():
 
 # Set up the screen
 screen = setup_screen()
-current_game = game.Game(screen)
-current_game.play()
-current_game.end_game()
+main_menu = menu.Menu(screen)
+main_menu.make_decision()
+
 screen.exitonclick()
