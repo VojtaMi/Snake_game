@@ -1,4 +1,5 @@
 from turtle import Screen
+from background import Background
 
 import menu
 
@@ -18,6 +19,7 @@ def setup_screen():
 
 # Set up the screen
 screen = setup_screen()
+background = Background()
 main_menu = menu.Menu(screen)
 main_menu.make_decision()
 

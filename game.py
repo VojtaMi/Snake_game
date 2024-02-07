@@ -1,5 +1,3 @@
-import turtle
-
 from food import Food
 from snakebody import SnakeBody, Direction
 from score import Score
@@ -17,8 +15,6 @@ class Game:
         self.snake = SnakeBody()
         self.food = Food(occupied_spots=self.snake.segments_positions())
         self.score = Score()
-        self.background = Background()
-        self.background.paint_play_field()
         self.input_handler = input_handler
 
     def play(self):
@@ -79,31 +75,3 @@ class GameOverWrite(Turtle):
         self.penup()
         self.goto(-160, -100)
         self.write("Game\nover", font=("Courier", 100, "normal"))
-
-
-class BorderTurtle(Turtle):
-    def __init__(self):
-        super().__init__()
-        self.hideturtle()
-        self.fillcolor("#8AC847")
-        self.pencolor("#6f4e37")
-
-    def draw_square(self, corner):
-        self.begin_fill()
-        x = corner
-        y = corner
-        self.teleport(-x, -y)
-        self.goto(x, -y)
-        self.goto(x, y)
-        self.goto(-x, y)
-        self.goto(-x, -y)
-        self.end_fill()
-
-
-class Background:
-    def __init__(self):
-        self.border_turtle = BorderTurtle()
-
-    def paint_play_field(self):
-        # fill play field green
-        self.border_turtle.draw_square(290)
