@@ -65,6 +65,7 @@ class Menu:
             current_game.play()
             current_game.end_game()
             self.menu_enabled = True  # Re-enable menu input after the game
+            self._reactivate_input_handler()
 
         elif self.current_state.description == EXIT_GAME_STR:
             self.screen.bye()
@@ -125,6 +126,9 @@ class Menu:
         self.draw_play_game_turtle.clear()
         self.draw_leaderboard_turtle.clear()
         self.draw_exit_game_turtle.clear()
+
+    def _reactivate_input_handler(self):
+        self.input_handler = InputHandler()
 
 
 class State:
