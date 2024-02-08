@@ -12,4 +12,4 @@ venv/
 # Other
 .idea/
 *.iml
-.high_scores.csv
+high_scores.csv
