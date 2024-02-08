@@ -4,6 +4,7 @@ from score import Score
 import utils
 from turtle import Turtle
 import time
+import leaderboard
 
 
 GRID_SIZE = 20
@@ -62,6 +63,8 @@ class Game:
 
         end_pen.clear()
         self.score.pen.clear()
+
+        leaderboard.add_if_high_score(self.score.score)
 
 
 
