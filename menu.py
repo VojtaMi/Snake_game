@@ -158,6 +158,6 @@ class Arrow(Turtle):
 
     def display(self, pos):
         xcor = pos[0] - 10
-        ycor = pos[1] + 35
+        ycor = pos[1] + 40
         self.goto(xcor, ycor)
         self.showturtle()
