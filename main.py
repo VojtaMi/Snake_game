@@ -1,7 +1,7 @@
+import turtle
 from turtle import Screen
 from background import Background
-
-import menu
+from menu import MainMenu
 
 # Constants
 SCREEN_WIDTH = 640
@@ -20,7 +20,7 @@ def setup_screen():
 # Set up the screen
 screen = setup_screen()
 background = Background()
-main_menu = menu.Menu(screen)
+main_menu = MainMenu(screen)
 main_menu.make_decision()
 
-screen.exitonclick()
+turtle.mainloop()
