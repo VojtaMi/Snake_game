@@ -25,15 +25,10 @@ def add_if_high_score(score):
     Adds the score from the finished game to the leaderboard if it's high enough
 
     Score is high enough if it's higher than the last score of the leaderboard,
-    if the leaderboard is not full, then it has to be at least higher than set minimal threshold (default 10)
+    or if the leaderboard is not yet full
 
     :param score: final score at the end of a game session
     """
-
-    # low scores are not saved,
-    min_score_threshold = 10
-    if score < min_score_threshold:
-        return
 
     # read score table into a local list
     high_scores = _load_high_scores()
