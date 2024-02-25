@@ -14,6 +14,7 @@ def check_proximity(pos1, pos2):
 class InputHandler:
     def __init__(self):
         self.key_pressed = None
+        self.enabled = True
 
         turtle.listen()
 
@@ -38,7 +39,16 @@ class InputHandler:
     def set_return_key_pressed(self):
         self.key_pressed = "Return"
 
+    def disable(self):
+        self.enabled = False
+
+    def enable(self):
+        self.__init__()
+
     def get_key_pressed(self):
+        if not self.enabled:
+            return
+
         key = self.key_pressed
         self.key_pressed = None
         return key
