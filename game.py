@@ -1,8 +1,8 @@
+import turtle
 from food import Food
 from snakebody import SnakeBody, Direction
 from score import Score
 import utils
-from turtle import Turtle
 import time
 import leaderboard
 
@@ -13,17 +13,12 @@ class Game:
     """
     Game logic controller.
     """
-    def __init__(self, screen, input_handler):
-        """
-
-        :param screen: turtle screen where game is displayed
-        :param input_handler:  key listener from utils.py
-        """
-        self.screen = screen
+    def __init__(self):
+        self.screen = turtle.Screen()
         self.snake = SnakeBody()
         self.food = Food(occupied_spots=self.snake.segments_positions())
         self.score = Score()
-        self.input_handler = input_handler
+        self.input_handler = utils.InputHandler()
 
     def play(self):
         game_loop = True
@@ -51,6 +46,8 @@ class Game:
             # checks for the flag from input_handler and sets the direction of snake's head
             self._move_on_key()
 
+        self._end_game()
+
     def _move_on_key(self):
         """
         Checks for the flag from input_handler and sets the direction of snake's head
@@ -65,49 +62,38 @@ class Game:
         if input_key == "s":
             self.snake.turn(Direction.DOWN)
 
-    def end_game(self):
+    def _end_game(self):
         """
         display ending animation, check for high score
         """
+        time.sleep(0.5)
+        self._remove_snake_from_screen()
+        time.sleep(0.3)
 
-        short_sleep = 0.3
-        medium_sleep = 0.5
-        long_sleep = 1.0
+        # display "Game Over" on screen
+        self._display_game_over()
 
-        time.sleep(medium_sleep)
-
-        # remove all elements from the screen
-        self.snake.snake_animation.wipe_snake()
-        self.food.hideturtle()
-        self.screen.update()
-
-        time.sleep(short_sleep)
-
-        # write "Game Over" on screen
-        end_pen = GameOverWrite()
-        self.screen.update()
-
-        time.sleep(long_sleep)
-
-        # clear screen
-        end_pen.clear()
+        # clear score
         self.score.pen.clear()
 
         # if the score is in top 5, add to the leaderboard
         leaderboard.add_if_high_score(self.score.score)
 
+    def _display_game_over(self):
+        """ Displays "Game Over" on screen for a "duration" seconds """
+        duration = 1
 
-class GameOverWrite(Turtle):
-    """
-    Displays "Game Over" on screen.
-    """
-    def __init__(self):
-        super().__init__()
-        self.color("white")
-        self.hideturtle()
-        self._write_game_over()
+        # writing object
+        pen = utils.Pen()
+        pos = (-160, -100)
+        pen.write_line(pos, "Game\nover", 100)
 
-    def _write_game_over(self):
-        self.penup()
-        self.goto(-160, -100)
-        self.write("Game\nover", font=("Courier", 100, "normal"))
+        self.screen.update()
+        time.sleep(duration)
+        pen.clear()
+
+    def _remove_snake_from_screen(self):
+        self.snake.snake_animation.wipe_snake()
+        self.food.hideturtle()
+        self.screen.update()
+
