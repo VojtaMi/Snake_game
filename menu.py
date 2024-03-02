@@ -1,201 +1,235 @@
 import turtle
 from turtle import Turtle
-import game
-from utils import InputHandler
+
+import background
 import leaderboard
-
-PLAY_GAME_STR = "Play Game"
-LEADERBOARD_STR = "Leaderboard"
-EXIT_GAME_STR = "Exit Game"
-
-XCOR_MENU = -210
+import utils
+from game import Game
 
 
-class MainMenu:
-    def __init__(self, screen):
-        self.screen = screen
-        self.input_handler = InputHandler()
-        self.current_state = self._initialize_states()
-        self.menu_enabled = True
+class MenuState:
+    """ Bare menu option - its logic without graphics  """
 
-        self.draw_play_game_turtle = DrawLineTurtle(PLAY_GAME_STR)
-        self.draw_leaderboard_turtle = DrawLineTurtle(LEADERBOARD_STR)
-        self.draw_exit_game_turtle = DrawLineTurtle(EXIT_GAME_STR)
+    def __init__(self, description):
+        self.description = description
+        self.functionality = lambda: print("no linked functionality yet")
+
+
+class ScreenTextElement:
+    """ Text element on menu screen that doesn't have runnable functionality """
+    def __init__(self, pos, text, font_size=50, font_weight="normal"):
+        """
+        :param pos: text position on the screen
+        """
+        self.pos = pos
+        self.text = text
+        self.font_size = font_size
+        self.font_weight = font_weight
+
+    def display(self, pen: utils.Pen):
+        pen.write_line(self.pos, self.text, self.font_size, self.font_weight)
+
+
+class MenuOption(MenuState):
+    """ A menu state with functionalities for screen display """
+
+    def __init__(self, description: str):
+        """
+        :param description: would be displayed on screen
+        """
+        MenuState.__init__(self, description)
+        # default value,
+        # is expected to be defined in the menu implementation
+        self.pos = (0, 0)
+
+    def display_as_selected(self, pen: utils.Pen, arrow):
+        """ Displays option as highlighted ("bold") with an arrow pointing at it """
+        pen.write_line(self.pos, self.description, font_weight="bold")
+        arrow.display(self.pos)
+
+    def display_as_normal(self, pen):
+        pen.write_line(self.pos, self.description)
+
+
+class Menu:
+    """ General menu implementation """
+
+    def __init__(self, *options: MenuOption):
+        """
+        Links options together as they are in the list
+        First option would be selected by default
+        Last option is considered "Exit" option
+        """
+        self.options = options
+        # keyboard input checker
+        self.input_handler = utils.InputHandler()
+
+        # selected option - later changed by the player
+        self.current_option = options[0]
+
+        # exit option is not changed
+        self.exit_option = options[-1]
+
+        # number of menu options
+        self.options_count = len(options)
+
+        # white write turtle
+        self.option_pen = utils.Pen()
+        self._text_pen = utils.Pen()
+
+        # text elements without runnable functionality
+        self.text_elements: [ScreenTextElement] = []
+
+        # points at the selected option
         self.arrow = Arrow()
 
-        self._display()
+    def next_option(self):
+        """ Sets current selected option to the next one """
+        next_index = (self._current_choice_index() + 1) % self.options_count
+        self.current_option = self.options[next_index]
 
-    def _initialize_states(self):
-        play_game = State(PLAY_GAME_STR)
-        leader_board = State(LEADERBOARD_STR)
-        exit_game = State(EXIT_GAME_STR)
-
-        play_game.next = leader_board
-        leader_board.next = exit_game
-        exit_game.next = play_game
-
-        play_game.previous = exit_game
-        leader_board.previous = play_game
-        exit_game.previous = leader_board
-
-        return play_game
-
-    def _select_next_state(self):
-        if not self.menu_enabled:
-            return
-        self.current_state = self.current_state.next
-        self._display()
-
-    def _select_previous_state(self):
-        if not self.menu_enabled:
-            return
-        self.current_state = self.current_state.previous
-        self._display()
-
-    def _approve_option(self):
-        self.clear_screen()
-        self.arrow.hideturtle()
-
-        if not self.menu_enabled:
-            return
-        if self.current_state.description == PLAY_GAME_STR:
-            self.menu_enabled = False  # Disable menu input
-            current_game = game.Game(self.screen, self.input_handler)
-            current_game.play()
-            current_game.end_game()
-            self.menu_enabled = True  # Re-enable menu input after the game
-            self._reactivate_input_handler()
-
-        elif self.current_state.description == LEADERBOARD_STR:
-            display_leaderboard(self.input_handler, self.screen)
-
-        elif self.current_state.description == EXIT_GAME_STR:
-            self.screen.bye()
-            exit()
-
-        self._display()
+    def previous_option(self):
+        """ Sets current selected option to the previous one """
+        previous_index = (self._current_choice_index() - 1) % self.options_count
+        self.current_option = self.options[previous_index]
 
     def make_decision(self):
+        """ Navigates the menu based on the user keyboard input """
 
         while True:
+
+            # read menu keyboard controls
             option = self.input_handler.get_key_pressed()
-            if option == "w":
-                self._select_previous_state()
-            elif option == "s":
-                self._select_next_state()
+
+            if option == "s":
+                self.next_option()
+
+            elif option == "w":
+                self.previous_option()
+
             elif option == "Return":
+                if self.current_option is self.exit_option:
+                    self._clear_menu_screen()
+                    break
                 self._approve_option()
-            turtle.update()
 
-    def _display(self):
+            self.display_text_elements()
+            self._display_options()
 
-        if self.current_state.description == PLAY_GAME_STR:
-            self._display_play_game_option("bold")
-        else:
-            self._display_play_game_option("normal")
+    def _display_options(self):
+        """ Displays the current state of the menu """
+        self.option_pen.clear()
+        for option in self.options:
+            if option == self.current_option:
+                option.display_as_selected(self.option_pen, self.arrow)
+            else:
+                option.display_as_normal(self.option_pen)
+        turtle.update()
 
-        if self.current_state.description == LEADERBOARD_STR:
-            self._display_leaderboard_option("bold")
-        else:
-            self._display_leaderboard_option("normal")
+    def _approve_option(self):
+        """ run the option's functionality """
+        self.input_handler.disable()
+        self._clear_menu_screen()
+        self.current_option.functionality()
+        self.input_handler.enable()
 
-        if self.current_state.description == EXIT_GAME_STR:
-            self._display_exit_game_option("bold")
-        else:
-            self._display_exit_game_option("normal")
+    def add_text_element(self, text_element: ScreenTextElement):
+        """ add ScreenTextElement object that is to be displayed """
+        self.text_elements.append(text_element)
 
-        self.screen.update()
+    def display_text_elements(self):
+        """ Displays all stored non-runnable text elements of the menu """
+        for text_element in self.text_elements:
+            text_element.display(self._text_pen)
 
-    def _display_play_game_option(self, font_weight):
-        pos = (XCOR_MENU, 140)
-        self.draw_play_game_turtle.write_line(pos, font_weight)
-        self._move_arrow_if_bold(font_weight, pos)
+    def _current_choice_index(self):
+        """ returns the current option index at the option list """
+        return self.options.index(self.current_option)
 
-    def _display_leaderboard_option(self, font_weight):
-        pos = (XCOR_MENU, -25)
-        self.draw_leaderboard_turtle.write_line(pos, font_weight)
-        self._move_arrow_if_bold(font_weight, pos)
-
-    def _display_exit_game_option(self, font_weight):
-        pos = (XCOR_MENU, -190)
-        self.draw_exit_game_turtle.write_line(pos, font_weight)
-        self._move_arrow_if_bold(font_weight, pos)
-
-    def _move_arrow_if_bold(self, font_weight, pos):
-        if font_weight == "bold":
-            self.arrow.display(pos)
-
-    def clear_screen(self):
-        self.draw_play_game_turtle.clear()
-        self.draw_leaderboard_turtle.clear()
-        self.draw_exit_game_turtle.clear()
-
-    def _reactivate_input_handler(self):
-        self.input_handler = InputHandler()
+    def _clear_menu_screen(self):
+        """ Remove all menu elements from the screen"""
+        self.option_pen.clear()
+        self._text_pen.clear()
+        self.arrow.hideturtle()
 
 
-class State:
-    def __init__(self, description):
-        self.next = None
-        self.previous = None
-        self.description = description
+class MainMenu(Menu):
+    """ Main menu of the snake game """
+    def __init__(self):
+        """ Define main menu options by their description"""
+        self.play_game = MenuOption("Play Game")
+        self.leaderboard = MenuOption("Leaderboard")
+        self.exit_game = MenuOption("Exit Game")
+
+        # initialize menu from the defined menu options
+        super().__init__(self.play_game, self.leaderboard, self.exit_game)
+
+        # define menu options functionalities and screen locations
+        self._define_options_functionalities()
+        self._define_options_locations()
+
+    def f_play_game(self):
+        """ Play Game menu option functionality - runs a game"""
+        Game().play()
+
+    def f_leaderboard(self):
+        """ Leaderboard menu option functionality - displays the Leaderboard as a sub-menu"""
+        leaderboard_menu = LeaderboardMenu()
+        leaderboard_menu.make_decision()
+
+    def _define_options_functionalities(self):
+        self.play_game.functionality = self.f_play_game
+        self.leaderboard.functionality = self.f_leaderboard
+        self.exit_game.functionality = None
+        # exit functionality is defined in the parent (menu) class by default for the last menu option
+
+    def _define_options_locations(self):
+        """ Positions menu options on screen"""
+
+        # left align distance
+        xcor_menu = -210
+
+        self.play_game.pos = (xcor_menu, 140)
+        self.leaderboard.pos = (xcor_menu, -25)
+        self.exit_game.pos = (xcor_menu, -190)
 
 
-class DrawLineTurtle(Turtle):
-    def __init__(self, text):
-        super().__init__()
-        self.hideturtle()
-        self.color("white")
-        self.font_size = 50
-        self.text = text
+class LeaderboardMenu(Menu):
+    def __init__(self):
+        """Simple submenu that displays leaderboard, with "Exit" as a single menu option"""
+        self.exit_leaderboard = MenuOption("Exit")
+        super().__init__(self.exit_leaderboard)
 
-    def write_line(self, start_pos, font_weight):
-        self.clear()
-        self.penup()
-        self.goto(start_pos)
-        self.write(self.text, font=("Courier", self.font_size, font_weight))
+        self._write_heading()
+        self._write_score_table()
+        self.exit_leaderboard.pos = (-95, -250)
+
+    def _write_heading(self):
+        """ Heading = "Best Scores" at the top of leaderboard screen"""
+        pos_heading = (-200, 165)
+        self.add_text_element(ScreenTextElement(pos_heading, "Best Scores", font_weight="bold"))
+
+    def _write_score_table(self):
+        """ Reads the score table and puts it in the menu as a ScreenTextElement object"""
+        scores_str = leaderboard.score_lines()
+        pos_scores = (-240, -200)
+        self.add_text_element(ScreenTextElement(pos_scores, scores_str, font_size=40))
 
 
 class Arrow(Turtle):
+    """
+    White arrow that accompanies the highlighted option
+    """
+
     def __init__(self):
         super().__init__()
         self.color("white")
         self.penup()
-        self.hideturtle()
 
     def display(self, pos):
+        # shifts the arrow relative to the position of the highlighted text
         xcor = pos[0] - 10
         ycor = pos[1] + 40
         self.goto(xcor, ycor)
+
         self.showturtle()
-
-
-def display_leaderboard(input_handler, screen):
-    scores_str = leaderboard.score_lines()
-    draw_scores = DrawLineTurtle(scores_str)
-    draw_scores.font_size = "40"
-
-    pos_heading = (-200, 165)
-    draw_heading = DrawLineTurtle("Best Scores")
-    draw_heading.write_line(pos_heading, "bold")
-
-    pos_scores = (-240, -200)
-    draw_scores.write_line(pos_scores, "normal")
-
-    pos_exit = (-95, -250)
-    draw_exit = DrawLineTurtle("Exit")
-    draw_exit.write_line(pos_exit, "bold")
-
-    arrow = Arrow()
-    arrow.display(pos_exit)
-
-    screen.update()
-
-    while True:
-        if input_handler.get_key_pressed() == "Return":
-            arrow.hideturtle()
-            draw_exit.clear()
-            draw_scores.clear()
-            draw_heading.clear()
-            return
-        screen.update()
