@@ -1,16 +1,11 @@
-from turtle import Turtle, Screen
-class Pen(Turtle):
-    def __init__(self):
-        super().__init__()
-        self.teleport(180, -315)
-        self.pencolor("white")
-        self.hideturtle()
+from turtle import Turtle
+import utils
 
 
 class Score:
     def __init__(self):
         self.score = 0
-        self.pen = Pen()
+        self.pen = utils.Pen()
         self.display()
 
     def increase(self):
@@ -18,6 +13,7 @@ class Score:
 
     def display(self):
         self.pen.clear()
-        pen = self.pen
-        pen.write("Score: {}".format(self.score), font=("Courier", 15, "bold"))
+        pos = (180, -315)
+        self.pen.write_line(pos, "Score: {}".format(self.score), 15, "bold")
+
 
