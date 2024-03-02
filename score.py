@@ -3,6 +3,7 @@ import utils
 
 
 class Score:
+    """In game score"""
     def __init__(self):
         self.score = 0
         self.pen = utils.Pen()
