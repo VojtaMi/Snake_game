@@ -1,4 +1,5 @@
 import turtle
+from turtle import Turtle
 
 
 def check_proximity(pos1, pos2):
@@ -52,3 +53,28 @@ class InputHandler:
         key = self.key_pressed
         self.key_pressed = None
         return key
+
+
+class Pen(Turtle):
+    """
+    Used to display white text on screen
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.color("white")
+        self.hideturtle()
+        self.penup()
+
+    def write_line(self, start_pos, text, font_size=50, font_weight="normal"):
+        """
+        :param start_pos: where the text starts
+        :param text: string to be displayed
+        :param font_size: default 50
+        :param font_weight: default "normal", set to "bold" for highlighted option
+        """
+        self.goto(start_pos)
+        self.write(text, font=("Courier", font_size, font_weight))
+
+
+
