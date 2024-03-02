@@ -1,4 +1,3 @@
-import turtle
 from turtle import Screen
 from background import Background
 from menu import MainMenu
@@ -23,10 +22,8 @@ if __name__ == "__main__":
     # set up the screen
     screen = setup_screen()
     # display background
-    background = Background()
+    Background()
 
     # start a menu decision loop
-    main_menu = MainMenu(screen)
+    main_menu = MainMenu()
     main_menu.make_decision()
-
-    screen.mainloop()
