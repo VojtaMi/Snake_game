@@ -2,7 +2,7 @@ import turtle
 from turtle import Turtle
 
 
-def check_proximity(pos1, pos2):
+def same_grid(pos1, pos2):
     """ Checks if two game objects are at the same grid neglecting float mistake"""
     x1 = pos1[0]
     x2 = pos2[0]

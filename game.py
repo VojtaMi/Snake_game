@@ -25,7 +25,7 @@ class Game:
 
         while game_loop:
             # check if snake's head and food are at the same spot, balancing float mistake
-            if utils.check_proximity(self.snake.head.pos(), self.food.pos()):
+            if utils.same_grid(self.snake.head.pos(), self.food.pos()):
 
                 # when the food is eaten, the snake grows at its tail
                 self.snake.pin_segment(GRID_SIZE)
