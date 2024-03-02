@@ -3,6 +3,7 @@ from turtle import Turtle
 
 
 def check_proximity(pos1, pos2):
+    """ Checks if two game objects are at the same grid neglecting float mistake"""
     x1 = pos1[0]
     x2 = pos2[0]
     y1 = pos1[1]
@@ -13,6 +14,7 @@ def check_proximity(pos1, pos2):
 
 
 class InputHandler:
+    """ Handles user keyboard input"""
     def __init__(self):
         self.key_pressed = None
         self.enabled = True
@@ -41,12 +43,15 @@ class InputHandler:
         self.key_pressed = "Return"
 
     def disable(self):
+        """ When disabled Input handler doesn't return keys pressed"""
         self.enabled = False
 
     def enable(self):
+        """ Refreshing the object"""
         self.__init__()
 
     def get_key_pressed(self):
+        """ If enabled return the last pressed key"""
         if not self.enabled:
             return
 
@@ -66,14 +71,14 @@ class Pen(Turtle):
         self.hideturtle()
         self.penup()
 
-    def write_line(self, start_pos, text, font_size=50, font_weight="normal"):
+    def write_line(self, line_pos, text, font_size=50, font_weight="normal"):
         """
-        :param start_pos: where the text starts
+        :param line_pos: where the text starts
         :param text: string to be displayed
         :param font_size: default 50
         :param font_weight: default "normal", set to "bold" for highlighted option
         """
-        self.goto(start_pos)
+        self.goto(line_pos)
         self.write(text, font=("Courier", font_size, font_weight))
 
 
