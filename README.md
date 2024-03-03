@@ -25,10 +25,7 @@
     <li>
         <a href="#4-internal-implementation-comments">Internal Implementation Comments</a>
     </li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#5-license">License</a></li>
   </ol>
 </details>
 
@@ -120,5 +117,9 @@ This project follows object-oriented principles, making some functionalities eas
 The program generates a file named high_scores.csv in the project's folder to permanently save the leaderboard, ensuring persistence even after the program terminates.
 
 For detailed documentation, please refer to the docstrings and code comments throughout the project.
+
+## 5. License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 
