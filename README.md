@@ -22,7 +22,9 @@
          <li><a href="#leaderboard">Leaderboard</a></li>
         </ul>
     </li>
-    <li><a href="#roadmap">Roadmap</a></li>
+    <li>
+        <a href="#4-internal-implementation-comments">Internal Implementation Comments</a>
+    </li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -110,3 +112,13 @@ A score qualifies for the leaderboard if the table has less than 5 members or if
 The leaderboard display menu has only one option: **Exit**, which returns the user to the main menu when **Enter** is pressed.
 
 <img src="https://github.com/VojtaMi/Snake_game/assets/146477483/3e12f777-83fc-4481-99f8-31f8f1ec468f" alt="Leaderboard Menu" width="400">
+
+## 4. Internal Implementation Comments
+
+This project follows object-oriented principles, making some functionalities easily reusable in other programs. Notably, the Menu class from the menu.py module and the InputHandler class from utils.py can be useful in other projects.
+
+The program generates a file named high_scores.csv in the project's folder to permanently save the leaderboard, ensuring persistence even after the program terminates.
+
+For detailed documentation, please refer to the docstrings and code comments throughout the project.
+
+
