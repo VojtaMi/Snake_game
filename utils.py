@@ -12,35 +12,47 @@ def same_grid(pos1, pos2):
     dist_y = abs(y1 - y2)
     return dist_x < 1 and dist_y < 1
 
+class Signal:
+    """ Grouping keyboard signals by their action """
+    UP = 0
+    DOWN = 1
+    LEFT = 2
+    RIGHT = 3
+    ENTER = 4
 
 class InputHandler:
     """ Handles user keyboard input"""
     def __init__(self):
-        self.key_pressed = None
+        self.signal = None
         self.enabled = True
 
         turtle.listen()
 
-        turtle.onkeypress(self.set_w_key_pressed, "w")
-        turtle.onkeypress(self.set_s_key_pressed, "s")
-        turtle.onkeypress(self.set_a_key_pressed, "a")
-        turtle.onkeypress(self.set_d_key_pressed, "d")
-        turtle.onkeypress(self.set_return_key_pressed, "Return")
+        turtle.onkeypress(self.set_up, "w")
+        turtle.onkeypress(self.set_down, "s")
+        turtle.onkeypress(self.set_left, "a")
+        turtle.onkeypress(self.set_right, "d")
+        turtle.onkeypress(self.set_enter, "Return")
 
-    def set_w_key_pressed(self):
-        self.key_pressed = "w"
+        turtle.onkeypress(self.set_up, "Up")
+        turtle.onkeypress(self.set_down, "Down")
+        turtle.onkeypress(self.set_left, "Left")
+        turtle.onkeypress(self.set_right, "Right")
 
-    def set_s_key_pressed(self):
-        self.key_pressed = "s"
+    def set_up(self):
+        self.signal = Signal.UP
 
-    def set_a_key_pressed(self):
-        self.key_pressed = "a"
+    def set_down(self):
+        self.signal = Signal.DOWN
 
-    def set_d_key_pressed(self):
-        self.key_pressed = "d"
+    def set_left(self):
+        self.signal = Signal.LEFT
 
-    def set_return_key_pressed(self):
-        self.key_pressed = "Return"
+    def set_right(self):
+        self.signal = Signal.RIGHT
+
+    def set_enter(self):
+        self.signal = Signal.ENTER
 
     def disable(self):
         """ When disabled Input handler doesn't return keys pressed"""
@@ -50,14 +62,14 @@ class InputHandler:
         """ Refreshing the object"""
         self.__init__()
 
-    def get_key_pressed(self):
-        """ If enabled return the last pressed key"""
+    def get_signal(self):
+        """ If enabled return the signal from the last pressed key"""
         if not self.enabled:
             return
 
-        key = self.key_pressed
-        self.key_pressed = None
-        return key
+        signal = self.signal
+        self.signal = None
+        return signal
 
 
 class Pen(Turtle):

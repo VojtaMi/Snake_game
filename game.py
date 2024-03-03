@@ -52,14 +52,14 @@ class Game:
         """
         Checks for the flag from input_handler and sets the direction of snake's head
         """
-        input_key = self.input_handler.get_key_pressed()
-        if input_key == "d":
+        signal = self.input_handler.get_signal()
+        if signal == utils.Signal.RIGHT:
             self.snake.turn(Direction.RIGHT)
-        if input_key == "w":
+        if signal == utils.Signal.UP:
             self.snake.turn(Direction.UP)
-        if input_key == "a":
+        if signal == utils.Signal.LEFT:
             self.snake.turn(Direction.LEFT)
-        if input_key == "s":
+        if signal == utils.Signal.DOWN:
             self.snake.turn(Direction.DOWN)
 
     def _end_game(self):

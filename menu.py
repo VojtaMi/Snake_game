@@ -99,15 +99,15 @@ class Menu:
         while True:
 
             # read menu keyboard controls
-            option = self.input_handler.get_key_pressed()
+            option = self.input_handler.get_signal()
 
-            if option == "s":
+            if option == utils.Signal.DOWN:
                 self.next_option()
 
-            elif option == "w":
+            elif option == utils.Signal.UP:
                 self.previous_option()
 
-            elif option == "Return":
+            elif option == utils.Signal.ENTER:
                 if self.current_option is self.exit_option:
                     self._clear_menu_screen()
                     break
