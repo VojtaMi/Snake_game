@@ -1,4 +1,4 @@
-# Snake Game
+# Snake Game in Python
 
 <!-- TABLE OF CONTENTS -->
 <details>
