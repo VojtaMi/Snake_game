@@ -45,7 +45,7 @@ This project is an implementation of the traditional snake game, written in Pyth
      ```sh
      python --version
      ```
-   - If Python is not installed or the version is older than 3.8, you can install it from [here](https://www.python.org/).
+   - If Python is not installed or the version is older than 3.12, you can install it from [here](https://www.python.org/).
 
  **Getting Git:**
    - Git is required to clone this repository. If you don't have Git installed, download it [here](https://git-scm.com/downloads).
